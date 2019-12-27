@@ -4,8 +4,6 @@ using UnityEngine;
 
 public class Clutch : DriveComponent {
 
-	public DriveComponent inputObject;
-
 	LeverAction clutch;
 
 	void Start () {
@@ -13,7 +11,14 @@ public class Clutch : DriveComponent {
 	}
 	
 	void Update () {
-		input = inputObject.output;
-		output.rpm = input.rpm * clutch.howActive;
+		torque = (upStream.isRunning ? upStream.torque : 1000f) * clutch.howActive;
+		isRunning = upStream.isRunning;
+		rpm = downStream.rpm;
+
+		if (downStream) {
+			torqueToTurn = torqueToTurnCurve.Evaluate(clutch.howActive) - downStream.torqueToTurn;
+		} else {
+			torqueToTurn = torqueToTurnCurve.Evaluate(clutch.howActive);
+		}
 	}
 }

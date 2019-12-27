@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c476dc5837f0d594b9eb537529a9d512, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cycleLength: 120
+  cycleLength: 1200
 --- !u!1 &228823399
 GameObject:
   m_ObjectHideFlags: 0
@@ -345,7 +345,7 @@ Transform:
   m_PrefabInternal: {fileID: 0}
   m_GameObject: {fileID: 228823399}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 6.97, y: 3.778, z: 5.679}
+  m_LocalPosition: {x: 6.907, y: 3.778, z: 18.039}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
   - {fileID: 534669905}
@@ -808,7 +808,36 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 39cb5aea5010ff640b35e0fc461684b7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  inputObject: {fileID: 2073269781}
+  downStream: {fileID: 969885408}
+  upStream: {fileID: 2073269781}
+  torqueToTurnCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    - serializedVersion: 3
+      time: 1
+      value: 2
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rpm: 0
+  torque: 0
+  torqueToTurn: 0
+  isRunning: 0
 --- !u!1 &874860709
 GameObject:
   m_ObjectHideFlags: 0
@@ -947,6 +976,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4506a99e4f5d0da48bcdcd1af28bcb61, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downStream: {fileID: 0}
+  upStream: {fileID: 0}
+  torqueToTurnCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rpm: 0
+  torque: 0
+  torqueToTurn: 0
+  isRunning: 0
   ship: {fileID: 969885408}
 --- !u!1001 &943467465
 Prefab:
@@ -1042,22 +1083,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c2992c8ed10fc124aad2f7da94a2c6d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downStream: {fileID: 0}
+  upStream: {fileID: 744458145}
+  torqueToTurnCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rpm: 0
+  torque: 0
+  torqueToTurn: 0
+  isRunning: 0
   wheelRPM: 0
   turnRange:
   - -1
-  - 1
-  throttleRange:
-  - 0
-  - 1
-  clutchRange:
-  - 0
   - 1
   brakingRange:
   - 0
   - 1
   turn: 0
-  throttle: 0
-  clutch: 0
   braking: 0
   reverse: 0
   axleInfos:
@@ -1071,10 +1116,32 @@ MonoBehaviour:
     isPowered: 1
     isSteerable: 1
     isFore: 0
-  maxMotorTorque: 0
   maxSteeringAngle: 30
-  maxBraking: 0
-  inputObject: {fileID: 744458145}
+  fuelSide: {fileID: 744458145}
+  frictionCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.9994472
+      value: 1000
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!114 &969885409
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1110,6 +1177,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d0bf406b68bba374088d3624d8af3d97, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  downStream: {fileID: 0}
+  upStream: {fileID: 0}
+  torqueToTurnCurve:
+    serializedVersion: 2
+    m_Curve: []
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rpm: 0
+  torque: 0
+  torqueToTurn: 0
+  isRunning: 0
 --- !u!1001 &983058803
 Prefab:
   m_ObjectHideFlags: 0
@@ -1655,14 +1734,87 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e38870bd3d8faea4195ce9a174474c2c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  currentRpm: 0
-  maxRpm: 40
-  minRpm: 3
-  currentTorque: 0
-  maxTorque: 25
-  minTorque: 0
+  downStream: {fileID: 744458145}
+  upStream: {fileID: 0}
+  torqueToTurnCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 2
+      inSlope: 0.0045967824
+      outSlope: 0.0045967824
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.9988432
+    - serializedVersion: 3
+      time: 1
+      value: 6
+      inSlope: -0.00025592977
+      outSlope: -0.00025592977
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 1
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  rpm: 0
+  torque: 0
+  torqueToTurn: 0
   isRunning: 0
+  maxTorque: 50
   startTorque: 5
+  rpmCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0.8
+      outSlope: 0.8
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 25
+      value: 20
+      inSlope: 0.8
+      outSlope: 0.8
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  torqueCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 50
+      outSlope: 50
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 50
+      inSlope: 50
+      outSlope: 50
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  temperature: 70
 --- !u!199 &2073269782
 ParticleSystemRenderer:
   serializedVersion: 6
@@ -1732,7 +1884,7 @@ ParticleSystem:
   stopAction: 0
   looping: 1
   prewarm: 0
-  playOnAwake: 1
+  playOnAwake: 0
   useUnscaledTime: 0
   autoRandomSeed: 1
   useRigidbodyForVelocity: 1
@@ -2610,27 +2762,27 @@ ParticleSystem:
         m_Curve:
         - serializedVersion: 3
           time: 0
-          value: 0
-          inSlope: 0.86892873
-          outSlope: 0.86892873
-          tangentMode: 34
-          weightedMode: 0
-          inWeight: 0
-          outWeight: 0.33333334
-        - serializedVersion: 3
-          time: 0.8905285
-          value: 0.7738058
-          inSlope: 0.8606487
-          outSlope: 0.8606487
+          value: 0.01459854
+          inSlope: 0.87546337
+          outSlope: 0.87546337
           tangentMode: 0
           weightedMode: 0
-          inWeight: 1
+          inWeight: 0
+          outWeight: 0.9939766
+        - serializedVersion: 3
+          time: 0.8933361
+          value: 0.7738058
+          inSlope: 0.8634418
+          outSlope: 0.8634418
+          tangentMode: 0
+          weightedMode: 0
+          inWeight: 0.9937289
           outWeight: 0.5378745
         - serializedVersion: 3
           time: 1
           value: 1
-          inSlope: 2.0662382
-          outSlope: 2.0662382
+          inSlope: 2.120626
+          outSlope: 2.120626
           tangentMode: 34
           weightedMode: 0
           inWeight: 0.33333334
@@ -2940,8 +3092,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 0.5019608}
-        key1: {r: 1, g: 1, b: 1, a: 0}
+        key0: {r: 1, g: 1, b: 1, a: 1}
+        key1: {r: 1, g: 1, b: 1, a: 0.5019608}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}
@@ -2957,16 +3109,16 @@ ParticleSystem:
         ctime6: 0
         ctime7: 0
         atime0: 0
-        atime1: 65535
-        atime2: 0
-        atime3: 0
+        atime1: 16384
+        atime2: 65535
+        atime3: 65535
         atime4: 0
         atime5: 0
         atime6: 0
         atime7: 0
         m_Mode: 0
         m_NumColorKeys: 2
-        m_NumAlphaKeys: 2
+        m_NumAlphaKeys: 3
       minGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}

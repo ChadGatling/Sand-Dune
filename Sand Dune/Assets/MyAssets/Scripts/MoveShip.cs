@@ -11,49 +11,55 @@ public class AxleInfo {
 	public bool isFore; // is the wheel in thr front?
 }
 
-[System.Serializable]
-public class MoveShip : MonoBehaviour {
+public class MoveShip : DriveComponent {
 
 	Rigidbody shipPhysics;
-	[Range(0f, 30f)] // make the high end the same as maxRPG
+	// [Range(0f, 30f)] // make the high end the same as maxRPG
 	[SerializeField] float wheelRPM;
 	// [SerializeField] float maxRPM;
 	[HideInInspector] public float[] turnRange = {-1f, 1f};
-	[HideInInspector] public float[] throttleRange = {0f, 1f};
-	[HideInInspector] public float[] clutchRange = {0f, 1f};
+	// [HideInInspector] public float[] throttleRange = {0f, 1f};
+	// [HideInInspector] public float[] clutchRange = {0f, 1f};
 	[HideInInspector] public float[] brakingRange = {0f, 1f};
 	[Range(-1f, 1f)] public float turn;
-	[Range(0f, 1f)]	public float throttle;
-	[Range(0f, 1f)]	public float clutch;
+	// [Range(0f, 1f)]	public float throttle;
+	// [Range(0f, 1f)]	public float clutch;
 	[Range(0, 1f)] public float braking;
 	[SerializeField] bool reverse;
     [SerializeField] List<AxleInfo> axleInfos; // the information about each individual axle
-    [SerializeField] float maxMotorTorque; // maximum torque the motor can apply to wheel
+    // [SerializeField] float maxMotorTorque; // maximum torque the motor can apply to wheel
     [SerializeField] float maxSteeringAngle; // maximum steer angle the wheel can have
-    [SerializeField] float maxBraking; // maximum steer angle the wheel can have
-	[SerializeField] DriveComponent inputObject;
-
-	DriveData input;
+    // [SerializeField] float maxBraking; // maximum steer angle the wheel can have
+	[SerializeField] DriveComponent fuelSide;
+	[SerializeField] AnimationCurve frictionCurve;
 
 	void Start () {
 		shipPhysics = GetComponent<Rigidbody>();
 	}
 	
 	void Update () {
-		input = inputObject.output;
+		// input = fuelSide.downStream;
 		turn = Mathf.Clamp(turn, turnRange[0], turnRange[1]);
-		throttle = Mathf.Clamp(throttle, throttleRange[0], throttleRange[1]);
-		clutch = Mathf.Clamp(clutch, clutchRange[0], clutchRange[1]);
+		// throttle = Mathf.Clamp(throttle, throttleRange[0], throttleRange[1]);
+		// clutch = Mathf.Clamp(clutch, clutchRange[0], clutchRange[1]);
 		braking = Mathf.Clamp(braking, brakingRange[0], brakingRange[1]);
 
-        float motor = 100f;
+        float motor = upStream.torque;
         float steering = maxSteeringAngle * turn;
-        float brake = 1f;
+        float brake = 100f;
 		int reversing = reverse ? -1 : 1;
 
-		wheelRPM = axleInfos[0].portWheel.rpm;
+		wheelRPM = 0;
+
+		float sprungMass = 0;
 
         foreach (AxleInfo axleInfo in axleInfos) {
+
+			wheelRPM = axleInfo.portWheel.rpm + axleInfo.starboardWheel.rpm;
+			sprungMass = axleInfo.portWheel.sprungMass + axleInfo.starboardWheel.sprungMass;
+
+			axleInfo.portWheel.brakeTorque = frictionCurve.Evaluate(axleInfo.portWheel.rpm);
+			axleInfo.starboardWheel.brakeTorque = frictionCurve.Evaluate(axleInfo.starboardWheel.rpm);
 
             if (axleInfo.isSteerable) {
 				if (axleInfo.isFore) {
@@ -69,34 +75,44 @@ public class MoveShip : MonoBehaviour {
 				axleInfo.portWheel.brakeTorque = brake;
 				axleInfo.starboardWheel.brakeTorque = brake;
 			} else if (axleInfo.isPowered) {
-				// axleInfo.portWheel.motorTorque = input.torque;
-				// axleInfo.starboardWheel.motorTorque = input.torque;
-
-				if (axleInfo.portWheel.rpm < input.rpm) {
-					axleInfo.portWheel.brakeTorque = 0f;
-					axleInfo.portWheel.motorTorque = motor;
-				} else if (axleInfo.portWheel.rpm > input.rpm) {
-					axleInfo.portWheel.motorTorque = 0f;
-					axleInfo.portWheel.brakeTorque = brake;
+				if (upStream.isRunning) {
+					axleInfo.portWheel.motorTorque = upStream.torque;
+					axleInfo.starboardWheel.motorTorque = upStream.torque;
 				} else {
-					axleInfo.portWheel.brakeTorque = 0f;
-					axleInfo.portWheel.motorTorque = 0f;
+					axleInfo.portWheel.brakeTorque = upStream.torque;
+					axleInfo.starboardWheel.brakeTorque = upStream.torque;
 				}
 
-				if (axleInfo.starboardWheel.rpm < input.rpm) {
-					axleInfo.starboardWheel.brakeTorque = 0f;
-					axleInfo.starboardWheel.motorTorque = motor;
-				} else if (axleInfo.starboardWheel.rpm > input.rpm) {
-					axleInfo.starboardWheel.motorTorque = 0f;
-					axleInfo.starboardWheel.brakeTorque = brake;
-				} else {
-					axleInfo.starboardWheel.brakeTorque = 0f;
-					axleInfo.starboardWheel.motorTorque = 0f;
-				}
+				// if (axleInfo.portWheel.rpm < upStream.rpm) {
+				// 	axleInfo.portWheel.brakeTorque = 0f;
+				// 	axleInfo.portWheel.motorTorque = motor;
+				// } else if (axleInfo.portWheel.rpm > upStream.rpm) {
+				// 	axleInfo.portWheel.motorTorque = 0f;
+				// 	axleInfo.portWheel.brakeTorque = brake;
+				// } else {
+				// 	axleInfo.portWheel.brakeTorque = 0f;
+				// 	axleInfo.portWheel.motorTorque = 0f;
+				// }
+
+				// if (axleInfo.starboardWheel.rpm < upStream.rpm) {
+				// 	axleInfo.starboardWheel.brakeTorque = 0f;
+				// 	axleInfo.starboardWheel.motorTorque = motor;
+				// } else if (axleInfo.starboardWheel.rpm > upStream.rpm) {
+				// 	axleInfo.starboardWheel.motorTorque = 0f;
+				// 	axleInfo.starboardWheel.brakeTorque = brake;
+				// } else {
+				// 	axleInfo.starboardWheel.brakeTorque = 0f;
+				// 	axleInfo.starboardWheel.motorTorque = 0f;
+				// }
             }			
             ApplyLocalPositionToVisuals(axleInfo.portWheel);
             ApplyLocalPositionToVisuals(axleInfo.starboardWheel);
         }
+
+		wheelRPM = wheelRPM / (axleInfos.Count * 2);
+		rpm = wheelRPM;
+		sprungMass = sprungMass / (axleInfos.Count * 2);
+		// fuelSide.currentRpm = ;
 		Debug.Log((Mathf.Round(shipPhysics.velocity.magnitude * 1.943844f * 100) / 100) + " Knots");
 	}
 	
