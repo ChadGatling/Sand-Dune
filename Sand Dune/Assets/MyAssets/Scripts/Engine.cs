@@ -66,8 +66,10 @@ public class Engine : DriveComponent {
 	}
 
 	void SetRpm() {
+		float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
+
 		if (downStream) {
-			rpm = downStream.rpm; // Getting the rpm to behave correctly coming from the clutch and based on the clutch position.
+			rpm = Mathf.Lerp(rpmCurve.Evaluate(torque), downStream.rpm, clutchHowActive);
 		} else {			
 			rpm = rpmCurve.Evaluate(torque);
 		}
