@@ -1095,7 +1095,6 @@ MonoBehaviour:
   torque: 0
   torqueToTurn: 0
   isRunning: 0
-  wheelRPM: 0
   turnRange:
   - -1
   - 1
@@ -1124,20 +1123,38 @@ MonoBehaviour:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: -0
+      outSlope: -0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0
+      outWeight: 1
     - serializedVersion: 3
-      time: 100
-      value: 100
-      inSlope: 3.1661282
-      outSlope: 3.1661282
+      time: 42.41901
+      value: 0.302912
+      inSlope: 0.012477569
+      outSlope: 0.012477569
+      tangentMode: 136
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 97.106094
+      value: 78.87941
+      inSlope: 3.843087
+      outSlope: 3.843087
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.31475532
+      inWeight: 0.0181961
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 100
+      value: 100.0001
+      inSlope: 11.099321
+      outSlope: 11.099321
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.210121
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2

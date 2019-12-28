@@ -15,7 +15,7 @@ public class MoveShip : DriveComponent {
 
 	Rigidbody shipPhysics;
 	// [Range(0f, 30f)] // make the high end the same as maxRPG
-	[SerializeField] float wheelRPM;
+	float wheelRPM;
 	// [SerializeField] float maxRPM;
 	[HideInInspector] public float[] turnRange = {-1f, 1f};
 	// [HideInInspector] public float[] throttleRange = {0f, 1f};
@@ -44,9 +44,9 @@ public class MoveShip : DriveComponent {
 		// clutch = Mathf.Clamp(clutch, clutchRange[0], clutchRange[1]);
 		braking = Mathf.Clamp(braking, brakingRange[0], brakingRange[1]);
 
-        float motor = upStream.torque;
+        torque = upStream.torque;
         float steering = maxSteeringAngle * turn;
-        float brake = 100f;
+        // float brake = 100f;
 		int reversing = reverse ? -1 : 1;
 
 		wheelRPM = 0;
@@ -71,16 +71,17 @@ public class MoveShip : DriveComponent {
 				}
             }
 
-			if (braking > 0) {
-				axleInfo.portWheel.brakeTorque = brake;
-				axleInfo.starboardWheel.brakeTorque = brake;
-			} else if (axleInfo.isPowered) {
+			// if (braking > 0) {
+			// 	axleInfo.portWheel.brakeTorque = brake;
+			// 	axleInfo.starboardWheel.brakeTorque = brake;
+			// } else 
+			if (axleInfo.isPowered) {
 				if (upStream.isRunning) {
-					axleInfo.portWheel.motorTorque = upStream.torque;
-					axleInfo.starboardWheel.motorTorque = upStream.torque;
+					axleInfo.portWheel.motorTorque = torque;
+					axleInfo.starboardWheel.motorTorque = torque;
 				} else {
-					axleInfo.portWheel.brakeTorque = upStream.torque;
-					axleInfo.starboardWheel.brakeTorque = upStream.torque;
+					axleInfo.portWheel.brakeTorque = torque + frictionCurve.Evaluate(axleInfo.portWheel.rpm); // Being weird. if engine is killed when running and then the clutch is fully disengaged the wheels want to power forward. IDK!
+					axleInfo.starboardWheel.brakeTorque = torque + frictionCurve.Evaluate(axleInfo.portWheel.rpm);
 				}
 
 				// if (axleInfo.portWheel.rpm < upStream.rpm) {
@@ -109,8 +110,7 @@ public class MoveShip : DriveComponent {
             ApplyLocalPositionToVisuals(axleInfo.starboardWheel);
         }
 
-		wheelRPM = wheelRPM / (axleInfos.Count * 2);
-		rpm = wheelRPM;
+		rpm = wheelRPM / (axleInfos.Count * 2);
 		sprungMass = sprungMass / (axleInfos.Count * 2);
 		// fuelSide.currentRpm = ;
 		Debug.Log((Mathf.Round(shipPhysics.velocity.magnitude * 1.943844f * 100) / 100) + " Knots");

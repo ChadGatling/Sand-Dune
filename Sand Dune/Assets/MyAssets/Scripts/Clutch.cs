@@ -13,7 +13,7 @@ public class Clutch : DriveComponent {
 	void Update () {
 		torque = (upStream.isRunning ? upStream.torque : 1000f) * clutch.howActive;
 		isRunning = upStream.isRunning;
-		rpm = downStream.rpm;
+		rpm = Mathf.Lerp(upStream.rpm, downStream.rpm, clutch.howActive);
 
 		if (downStream) {
 			torqueToTurn = torqueToTurnCurve.Evaluate(clutch.howActive) - downStream.torqueToTurn;

@@ -32,6 +32,7 @@ public class Engine : DriveComponent {
 			IncreaseTemperature();
 			Stall();
 		} else {
+			rpm = 0;
 			Ignition();
 			DecreaseTemperature();
 		}
