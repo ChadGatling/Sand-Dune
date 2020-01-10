@@ -79,8 +79,12 @@ public class MoveShip : DriveComponent {
 				if (upStream.isRunning) {
 					axleInfo.portWheel.motorTorque = torque;
 					axleInfo.starboardWheel.motorTorque = torque;
+					axleInfo.portWheel.brakeTorque = 0;
+					axleInfo.starboardWheel.brakeTorque = 0;
 				} else {
-					axleInfo.portWheel.brakeTorque = torque + frictionCurve.Evaluate(axleInfo.portWheel.rpm); // Being weird. if engine is killed when running and then the clutch is fully disengaged the wheels want to power forward. IDK!
+					axleInfo.portWheel.motorTorque = 0;
+					axleInfo.starboardWheel.motorTorque = 0;
+					axleInfo.portWheel.brakeTorque = torque + frictionCurve.Evaluate(axleInfo.portWheel.rpm);
 					axleInfo.starboardWheel.brakeTorque = torque + frictionCurve.Evaluate(axleInfo.portWheel.rpm);
 				}
 
