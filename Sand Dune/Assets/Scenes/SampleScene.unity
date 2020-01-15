@@ -1095,6 +1095,7 @@ MonoBehaviour:
   torque: 0
   torqueToTurn: 0
   isRunning: 0
+  Knots: 0
   turnRange:
   - -1
   - 1
@@ -1104,58 +1105,32 @@ MonoBehaviour:
   turn: 0
   braking: 0
   reverse: 0
-  axleInfos:
-  - portWheel: {fileID: 568000022}
-    starboardWheel: {fileID: 1650498838}
+  wheels:
+  - wheel: {fileID: 568000022}
     isPowered: 1
     isSteerable: 1
     isFore: 1
-  - portWheel: {fileID: 703708704}
-    starboardWheel: {fileID: 1961555275}
+    isStarboard: 0
+  - wheel: {fileID: 1650498838}
+    isPowered: 1
+    isSteerable: 1
+    isFore: 1
+    isStarboard: 1
+  - wheel: {fileID: 703708704}
     isPowered: 1
     isSteerable: 1
     isFore: 0
+    isStarboard: 0
+  - wheel: {fileID: 1961555275}
+    isPowered: 1
+    isSteerable: 1
+    isFore: 0
+    isStarboard: 1
   maxSteeringAngle: 30
   fuelSide: {fileID: 744458145}
   frictionCurve:
     serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: -0
-      outSlope: -0
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 1
-    - serializedVersion: 3
-      time: 42.41901
-      value: 0.302912
-      inSlope: 0.012477569
-      outSlope: 0.012477569
-      tangentMode: 136
-      weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 97.106094
-      value: 78.87941
-      inSlope: 3.843087
-      outSlope: 3.843087
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.0181961
-      outWeight: 0.33333334
-    - serializedVersion: 3
-      time: 100
-      value: 100.0001
-      inSlope: 11.099321
-      outSlope: 11.099321
-      tangentMode: 0
-      weightedMode: 0
-      inWeight: 0.210121
-      outWeight: 0
+    m_Curve: []
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
