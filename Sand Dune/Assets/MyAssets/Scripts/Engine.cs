@@ -4,12 +4,14 @@ using UnityEngine;
 
 public class Engine : DriveComponent {
 
-	public float maxTorque;
-	public float startTorque;
-	public AnimationCurve rpmCurve;
-	public AnimationCurve torqueCurve;
+	[SerializeField] float torqueMax;
+	[SerializeField] float torqueStart;
+	[SerializeField] AnimationCurve torqueCurve;
 
-	float minRpm;
+	[SerializeField] float rpmMax;
+	[SerializeField] float rpmMin;
+	[SerializeField] AnimationCurve rpmCurve;
+
 	LeverAction throttle;
 	ButtonAction ignition;
 	PushPullAction choke;
@@ -27,12 +29,12 @@ public class Engine : DriveComponent {
 	
 	void Update () {
 		if (isRunning) {
-			SetTorque();
 			SetRpm();
+			SetTorque();
 			IncreaseTemperature();
 			Stall();
 		} else {
-			rpm = 0;
+			rpmCurrent = 0;
 			Ignition();
 			DecreaseTemperature();
 		}
@@ -56,46 +58,44 @@ public class Engine : DriveComponent {
 
 	void SetTorque() {
 		float unclampedTorque;
-		torqueToTurn = torqueToTurnCurve.Evaluate(throttle.howActive);
+		var rpmRatio = rpmCurrent/rpmMax;
 
-		if (downStream)
-			unclampedTorque = torqueCurve.Evaluate(throttle.howActive) - torqueToTurn - downStream.torqueToTurn;
-		else
-			unclampedTorque = torqueCurve.Evaluate(throttle.howActive) - torqueToTurn;
-
-		torque = Mathf.Clamp(unclampedTorque, 0, maxTorque);
+		if (downStream != null) unclampedTorque = Utility.EvaluateCurve(torqueCurve, throttle.howActive, torqueMax) - torqueToTurnMax - downStream.torqueToTurnMax;
+		else unclampedTorque = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax) * throttle.howActive - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax);
+		
+		torqueCurrent = Mathf.Clamp(unclampedTorque, 0, torqueMax); // Need to add negative torque to the engine based on the ratio of the throttle (ratio) to the rpm (ratio).
 	}
 
 	void SetRpm() {
-		float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
+ 		if (downStream != null) {
+			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;			 
+			rpmCurrent = Mathf.Lerp(Utility.EvaluateCurve(rpmCurve, torqueCurrent), downStream.rpmCurrent, clutchHowActive);
+		} else rpmCurrent += (torqueCurrent - Utility.EvaluateCurve(torqueToTurnCurve, rpmCurrent/rpmMax, torqueToTurnMax)) * Time.deltaTime;
 
-		if (downStream) {
-			rpm = Mathf.Lerp(rpmCurve.Evaluate(torque), downStream.rpm, clutchHowActive);
-		} else {			
-			rpm = rpmCurve.Evaluate(torque);
-		}
+		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		
         ParticleSystem.EmissionModule emission = exhaust.emission;
-		emission.rateOverTime = rpm;
+		emission.rateOverTime = rpmCurrent;
 	}
 
 	void Ignition() {
 		if (!ignition.isActive) {
-			torque = 0;
+			torqueCurrent = 0;
 			return;
 		}
 		
-		torque += Time.deltaTime * startTorque;
-		torque = Mathf.Clamp(torque, 0, startTorque);
+		torqueCurrent += Time.deltaTime * torqueStart;
+		torqueCurrent = Mathf.Clamp(torqueCurrent, 0, torqueStart);
+  		SetRpm();
 		
-		if (choke.isActive && torque > torqueToTurn) {
+		if (choke.isActive && torqueCurrent >= torqueStart) {
 			isRunning = true;
 			exhaust.Play();
 		}
 	}
 
 	void Stall() {
-		if (torque < torqueToTurn) {
+		if (rpmCurrent <= 0) {
 			isRunning = false;
 			exhaust.Stop();
 		}

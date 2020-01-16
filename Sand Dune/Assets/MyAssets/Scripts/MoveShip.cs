@@ -57,7 +57,7 @@ public class MoveShip : DriveComponent {
 		// clutch = Mathf.Clamp(clutch, clutchRange[0], clutchRange[1]);
 		braking = Mathf.Clamp(braking, brakingRange[0], brakingRange[1]);
 
-        torque = upStream.torque;
+        torqueCurrent = upStream.torqueCurrent;
         float steering = maxSteeringAngle * turn;
         // float brake = 100f;
 		int reversing = reverse ? -1 : 1;
@@ -82,17 +82,17 @@ public class MoveShip : DriveComponent {
 
 			if (wheelUnit.isPowered) {
 				if (upStream.isRunning) {
-					wheelUnit.wheel.motorTorque = torque - frictionTorque;
+					wheelUnit.wheel.motorTorque = torqueCurrent - frictionTorque;
 					wheelUnit.wheel.brakeTorque = frictionTorque;
 				} else {
 					wheelUnit.wheel.motorTorque = 0;
-					wheelUnit.wheel.brakeTorque = torque + frictionTorque;
+					wheelUnit.wheel.brakeTorque = torqueCurrent + frictionTorque;
 				}
             }			
             ApplyLocalPositionToVisuals(wheelUnit.wheel);
         }
 
-		rpm = wheelRPM / wheels.Count;
+		rpmCurrent = wheelRPM / wheels.Count;
 		sprungMass = sprungMass / wheels.Count;
 		// fuelSide.currentRpm = ;
 		Knots = Mathf.Round(shipPhysics.velocity.magnitude * 1.943844f * 100) / 100;

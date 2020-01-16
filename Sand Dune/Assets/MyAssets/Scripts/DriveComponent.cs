@@ -3,13 +3,13 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class DriveComponent : MonoBehaviour {
+	[HideInInspector] public bool isRunning;
 	public DriveComponent downStream;
 	public DriveComponent upStream;
+	public float rpmCurrent;
+	public float torqueCurrent;
+	public float torqueToTurnMax;
 	public AnimationCurve torqueToTurnCurve;
-	public float rpm;
-	public float torque;
-	public float torqueToTurn;
-	[HideInInspector] public bool isRunning;
 }
 
 // [System.Serializable]

@@ -11,14 +11,14 @@ public class Clutch : DriveComponent {
 	}
 	
 	void Update () {
-		torque = (upStream.isRunning ? upStream.torque : 1000f) * clutch.howActive;
+		torqueCurrent = (upStream.isRunning ? upStream.torqueCurrent : 1000f) * clutch.howActive;
 		isRunning = upStream.isRunning;
-		rpm = Mathf.Lerp(upStream.rpm, downStream.rpm, clutch.howActive);
+		rpmCurrent = Mathf.Lerp(upStream.rpmCurrent, downStream.rpmCurrent, clutch.howActive);
 
 		if (downStream) {
-			torqueToTurn = torqueToTurnCurve.Evaluate(clutch.howActive) - downStream.torqueToTurn;
+			torqueToTurnMax = torqueToTurnCurve.Evaluate(clutch.howActive) - downStream.torqueToTurnMax;
 		} else {
-			torqueToTurn = torqueToTurnCurve.Evaluate(clutch.howActive);
+			torqueToTurnMax = torqueToTurnCurve.Evaluate(clutch.howActive);
 		}
 	}
 }
