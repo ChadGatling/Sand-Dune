@@ -57,25 +57,35 @@ public class Engine : DriveComponent {
 	}
 
 	void SetTorque() {
-		float unclampedTorque;
 		var rpmRatio = rpmCurrent/rpmMax;
+		var torqueMaxThisRpm = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax);
+		float engineBrakeTorque = torqueMaxThisRpm - torqueMaxThisRpm * throttle.howActive;
+		float torqueGross = torqueMaxThisRpm * throttle.howActive;		
 
-		if (downStream != null) unclampedTorque = Utility.EvaluateCurve(torqueCurve, throttle.howActive, torqueMax) - torqueToTurnMax - downStream.torqueToTurnMax;
-		else unclampedTorque = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax) * throttle.howActive - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax);
-		
-		torqueCurrent = Mathf.Clamp(unclampedTorque, 0, torqueMax); // Need to add negative torque to the engine based on the ratio of the throttle (ratio) to the rpm (ratio).
+		if (downStream != null) torqueCurrent = Utility.EvaluateCurve(torqueCurve, throttle.howActive, torqueMax) - torqueToTurnMax - downStream.torqueToTurnMax;
+		else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1;
+
+		if (torqueCurrent < 0) torqueCurrent *= 3; // might be as good as I can get for now. Meant to simulate engine brake.
+
+		#if UNITY_EDITOR
+		if (torqueCurrent > torqueMax) { // Remove after some time when it is shown that it will not happen.
+			Debug.Break();
+			Debug.Log("torqueCurrent has exceded torqueMax");
+			torqueCurrent = torqueMax;
+		};
+		#endif
 	}
 
 	void SetRpm() {
  		if (downStream != null) {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;			 
 			rpmCurrent = Mathf.Lerp(Utility.EvaluateCurve(rpmCurve, torqueCurrent), downStream.rpmCurrent, clutchHowActive);
-		} else rpmCurrent += (torqueCurrent - Utility.EvaluateCurve(torqueToTurnCurve, rpmCurrent/rpmMax, torqueToTurnMax)) * Time.deltaTime;
+		} else rpmCurrent += torqueCurrent * Time.deltaTime * 50;
 
 		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		
         ParticleSystem.EmissionModule emission = exhaust.emission;
-		emission.rateOverTime = rpmCurrent;
+		emission.rateOverTime = rpmCurrent / 10;
 	}
 
 	void Ignition() {

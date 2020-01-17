@@ -1731,67 +1731,94 @@ MonoBehaviour:
   upStream: {fileID: 0}
   rpmCurrent: 0
   torqueCurrent: 0
-  torqueToTurnMax: 10
+  torqueToTurnMax: 100
   torqueToTurnCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
       value: 0
-      inSlope: 0
-      outSlope: 0
+      inSlope: 1
+      outSlope: 1
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0
-      outWeight: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
     - serializedVersion: 3
       time: 1
       value: 1
-      inSlope: 0
-      outSlope: 0
-      tangentMode: 0
+      inSlope: 1
+      outSlope: 1
+      tangentMode: 34
       weightedMode: 0
-      inWeight: 0
+      inWeight: 0.33333334
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torqueMax: 200
+  torqueMax: 150
   torqueStart: 10
   torqueCurve:
     serializedVersion: 2
     m_Curve:
     - serializedVersion: 3
       time: 0
-      value: 0
-      inSlope: 3.3413935
-      outSlope: 3.3413935
+      value: 0.35
+      inSlope: -0.000093380135
+      outSlope: -0.000093380135
       tangentMode: 0
       weightedMode: 0
       inWeight: 0
-      outWeight: 0.5992261
+      outWeight: 1
     - serializedVersion: 3
-      time: 0.5
-      value: 1
-      inSlope: -0.000121646146
-      outSlope: -0.000121646146
+      time: 0.075
+      value: 0.35
+      inSlope: 0
+      outSlope: 0
       tangentMode: 0
       weightedMode: 0
       inWeight: 0.33333334
-      outWeight: 0.99785984
+      outWeight: 1
     - serializedVersion: 3
-      time: 1
-      value: 0
-      inSlope: -3.9890645
-      outSlope: -3.9890645
+      time: 0.11334205
+      value: 0.399252
+      inSlope: 4.0058293
+      outSlope: 4.0058293
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.50193477
+      inWeight: 0.3431374
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.30035743
+      value: 0.8178716
+      inSlope: 1.356441
+      outSlope: 1.356441
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.7
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.7
+      inSlope: -2.2084525
+      outSlope: -2.2084525
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.056501508
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  rpmMax: 150
+  rpmMax: 6250
   rpmMin: 5
   rpmCurve:
     serializedVersion: 2
