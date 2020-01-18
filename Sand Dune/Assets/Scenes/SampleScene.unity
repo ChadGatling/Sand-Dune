@@ -1727,11 +1727,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isRunning: 0
-  downStream: {fileID: 0}
+  downStream: {fileID: 744458145}
   upStream: {fileID: 0}
   rpmCurrent: 0
   torqueCurrent: 0
-  torqueToTurnMax: 100
+  torqueToTurnMax: 50
   torqueToTurnCurve:
     serializedVersion: 2
     m_Curve:
@@ -1897,7 +1897,7 @@ ParticleSystemRenderer:
   m_EnableGPUInstancing: 1
   m_ApplyActiveColorSpace: 1
   m_VertexStreams: 00010304
-  m_Mesh: {fileID: 0}
+  m_Mesh: {fileID: 10202, guid: 0000000000000000e000000000000000, type: 0}
   m_Mesh1: {fileID: 0}
   m_Mesh2: {fileID: 0}
   m_Mesh3: {fileID: 0}
@@ -2675,7 +2675,7 @@ ParticleSystem:
     rateOverTime:
       serializedVersion: 2
       minMaxState: 0
-      scalar: 4
+      scalar: 10
       minScalar: 10
       maxCurve:
         serializedVersion: 2
@@ -3122,8 +3122,8 @@ ParticleSystem:
       maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
-        key0: {r: 1, g: 1, b: 1, a: 1}
-        key1: {r: 1, g: 1, b: 1, a: 0.5019608}
+        key0: {r: 1, g: 1, b: 1, a: 0.25882354}
+        key1: {r: 1, g: 1, b: 1, a: 0.08235294}
         key2: {r: 0, g: 0, b: 0, a: 0}
         key3: {r: 0, g: 0, b: 0, a: 0}
         key4: {r: 0, g: 0, b: 0, a: 0}

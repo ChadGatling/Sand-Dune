@@ -58,12 +58,14 @@ public class Engine : DriveComponent {
 
 	void SetTorque() {
 		var rpmRatio = rpmCurrent/rpmMax;
-		var torqueMaxThisRpm = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax);
-		float engineBrakeTorque = torqueMaxThisRpm - torqueMaxThisRpm * throttle.howActive;
-		float torqueGross = torqueMaxThisRpm * throttle.howActive;		
+		// var torqueMaxThisRpm = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax);
+		// float engineBrakeTorque = torqueMaxThisRpm - torqueMaxThisRpm * throttle.howActive;
+		float torqueGross = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax) * throttle.howActive;
 
-		if (downStream != null) torqueCurrent = Utility.EvaluateCurve(torqueCurve, throttle.howActive, torqueMax) - torqueToTurnMax - downStream.torqueToTurnMax;
-		else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1;
+		if (downStream != null) {
+			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
+			torqueCurrent = torqueGross - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1 - downStream.torqueToTurnMax * clutchHowActive;  
+		} else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1;
 
 		if (torqueCurrent < 0) torqueCurrent *= 3; // might be as good as I can get for now. Meant to simulate engine brake.
 
@@ -78,14 +80,14 @@ public class Engine : DriveComponent {
 
 	void SetRpm() {
  		if (downStream != null) {
-			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;			 
-			rpmCurrent = Mathf.Lerp(Utility.EvaluateCurve(rpmCurve, torqueCurrent), downStream.rpmCurrent, clutchHowActive);
+			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
+			rpmCurrent = Mathf.Lerp( rpmCurrent + torqueCurrent * Time.deltaTime * 50, downStream.rpmCurrent, clutchHowActive);
 		} else rpmCurrent += torqueCurrent * Time.deltaTime * 50;
 
 		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		
         ParticleSystem.EmissionModule emission = exhaust.emission;
-		emission.rateOverTime = rpmCurrent / 10;
+		emission.rateOverTime = rpmCurrent / 100;
 	}
 
 	void Ignition() {

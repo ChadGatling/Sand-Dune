@@ -16,9 +16,9 @@ public class Clutch : DriveComponent {
 		rpmCurrent = Mathf.Lerp(upStream.rpmCurrent, downStream.rpmCurrent, clutch.howActive);
 
 		if (downStream) {
-			torqueToTurnMax = torqueToTurnCurve.Evaluate(clutch.howActive) - downStream.torqueToTurnMax;
+			torqueToTurnMax = torqueToTurnCurve.Evaluate(rpmCurrent) - downStream.torqueToTurnMax;
 		} else {
-			torqueToTurnMax = torqueToTurnCurve.Evaluate(clutch.howActive);
+			torqueToTurnMax = torqueToTurnCurve.Evaluate(rpmCurrent);
 		}
 	}
 }
