@@ -1731,7 +1731,7 @@ MonoBehaviour:
   upStream: {fileID: 0}
   rpmCurrent: 0
   torqueCurrent: 0
-  torqueToTurnMax: 50
+  torqueToTurnMax: 150
   torqueToTurnCurve:
     serializedVersion: 2
     m_Curve:
@@ -1756,7 +1756,7 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  torqueMax: 150
+  torqueMax: 100
   torqueStart: 10
   torqueCurve:
     serializedVersion: 2
@@ -1818,32 +1818,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  rpmMax: 6250
+  rpmMax: 120
   rpmMin: 5
-  rpmCurve:
-    serializedVersion: 2
-    m_Curve:
-    - serializedVersion: 3
-      time: 0
-      value: 0
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    - serializedVersion: 3
-      time: 1
-      value: 1
-      inSlope: 1
-      outSlope: 1
-      tangentMode: 34
-      weightedMode: 0
-      inWeight: 0
-      outWeight: 0
-    m_PreInfinity: 2
-    m_PostInfinity: 2
-    m_RotationOrder: 4
   temperature: 70
 --- !u!199 &2073269782
 ParticleSystemRenderer:

@@ -10,7 +10,7 @@ public class Engine : DriveComponent {
 
 	[SerializeField] float rpmMax;
 	[SerializeField] float rpmMin;
-	[SerializeField] AnimationCurve rpmCurve;
+	// [SerializeField] AnimationCurve rpmCurve;
 
 	LeverAction throttle;
 	ButtonAction ignition;
@@ -27,7 +27,7 @@ public class Engine : DriveComponent {
 		SetOutput();
 	}
 	
-	void Update () {
+	void FixedUpdate () {
 		if (isRunning) {
 			SetRpm();
 			SetTorque();
@@ -44,14 +44,14 @@ public class Engine : DriveComponent {
 
 	void IncreaseTemperature() {
 		if (temperature < 250) {
-			temperature += Time.deltaTime;
+			temperature += Time.fixedDeltaTime;
 			temperature = Mathf.Clamp(temperature, 70, 250);
 		}
 	}
 
 	void DecreaseTemperature() {
 		if (temperature > 70) {
-			temperature -= Time.deltaTime;
+			temperature -= Time.fixedDeltaTime;
 			temperature = Mathf.Clamp(temperature, 70, 250);
 		}
 	}
@@ -65,7 +65,7 @@ public class Engine : DriveComponent {
 		if (downStream != null) {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
 			torqueCurrent = torqueGross - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1 - downStream.torqueToTurnMax * clutchHowActive;  
-		} else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1;
+		} else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1; // gets stuck when lowering throttle. maybe?
 
 		if (torqueCurrent < 0) torqueCurrent *= 3; // might be as good as I can get for now. Meant to simulate engine brake.
 
@@ -81,13 +81,13 @@ public class Engine : DriveComponent {
 	void SetRpm() {
  		if (downStream != null) {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
-			rpmCurrent = Mathf.Lerp( rpmCurrent + torqueCurrent * Time.deltaTime * 50, downStream.rpmCurrent, clutchHowActive);
-		} else rpmCurrent += torqueCurrent * Time.deltaTime * 50;
+			rpmCurrent = Mathf.Lerp( rpmCurrent + torqueCurrent * Time.fixedDeltaTime, downStream.rpmCurrent, clutchHowActive);
+		} else rpmCurrent += torqueCurrent * Time.fixedDeltaTime;
 
 		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		
         ParticleSystem.EmissionModule emission = exhaust.emission;
-		emission.rateOverTime = rpmCurrent / 100;
+		emission.rateOverTime = rpmCurrent / 60;
 	}
 
 	void Ignition() {
@@ -96,11 +96,11 @@ public class Engine : DriveComponent {
 			return;
 		}
 		
-		torqueCurrent += Time.deltaTime * torqueStart;
+		torqueCurrent += Time.fixedDeltaTime * torqueStart;
 		torqueCurrent = Mathf.Clamp(torqueCurrent, 0, torqueStart);
   		SetRpm();
 		
-		if (choke.isActive && torqueCurrent >= torqueStart) {
+		if (choke.isActive && rpmCurrent > 0) {
 			isRunning = true;
 			exhaust.Play();
 		}

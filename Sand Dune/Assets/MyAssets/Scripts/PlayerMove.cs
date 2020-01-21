@@ -21,6 +21,9 @@ public class PlayerMove : MonoBehaviour {
 
 	void Update() {
 		JumpInput();
+	}
+
+	void FixedUpdate() {
 		PlayerMovement();
 	}
 
@@ -35,17 +38,13 @@ public class PlayerMove : MonoBehaviour {
 			Vector3 rightMovement = transform.right * horInput;
 			
             moveDirection = rightMovement + forwardMovement;
-            moveDirection *= movementSpeed;	
-			// moveDirection += shipPhysics.velocity;
+            moveDirection *= movementSpeed;
 		} else {			
-			moveDirection.y -= 20 * Time.deltaTime;
+			moveDirection.y -= 20 * Time.fixedDeltaTime;
 		}
 		
-		if (Input.GetButton("Vertical") || Input.GetButton("Horizontal") || !isGrounded) // still need to figure out how to move the player with the ship at all times.
-			if (hasParent)
-				charController.Move((moveDirection + (shipPhysics.velocity)) * Time.deltaTime);
-			else
-				charController.Move(moveDirection * Time.deltaTime);
+		// if (Input.GetButton("Vertical") || Input.GetButton("Horizontal") || !isGrounded) // still need to figure out how to move the player with the ship at all times.
+		charController.Move(moveDirection * Time.fixedDeltaTime);
 	}
 	
 	void JumpInput() {

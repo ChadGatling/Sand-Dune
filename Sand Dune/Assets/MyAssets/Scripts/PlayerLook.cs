@@ -35,7 +35,7 @@ public class PlayerLook : MonoBehaviour {
 			mouseY += -Input.GetAxis("Mouse Y") * mouseSensitivity * Time.deltaTime;
 			mouseY = Mathf.Clamp(mouseY, -90f, 90f);
 
-			Cursor.lockState = CursorLockMode.Locked;
+			Cursor.lockState = CursorLockMode.Locked; // seems take up a good amount of cpu time. Replace this with a UI reticle.
 			transform.eulerAngles = new Vector3(mouseY, transform.eulerAngles.y, 0);
 		}
 		

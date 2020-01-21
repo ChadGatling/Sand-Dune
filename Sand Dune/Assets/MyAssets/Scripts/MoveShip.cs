@@ -50,7 +50,7 @@ public class MoveShip : DriveComponent {
 		shipPhysics = GetComponent<Rigidbody>();
 	}
 	
-	void Update () {
+	void FixedUpdate () {
 		// input = fuelSide.downStream;
 		turn = Mathf.Clamp(turn, turnRange[0], turnRange[1]);
 		// throttle = Mathf.Clamp(throttle, throttleRange[0], throttleRange[1]);
