@@ -11,7 +11,7 @@ public class Clutch : DriveComponent {
 	}
 	
 	void Update () {
-		torqueCurrent = (upStream.isRunning ? upStream.torqueCurrent : 1000f) * clutch.howActive;
+		torqueCurrent = upStream.torqueCurrent * clutch.howActive;
 		isRunning = upStream.isRunning;
 		rpmCurrent = Mathf.Lerp(upStream.rpmCurrent, downStream.rpmCurrent, clutch.howActive);
 

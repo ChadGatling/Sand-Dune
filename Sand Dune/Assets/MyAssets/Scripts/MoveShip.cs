@@ -80,15 +80,15 @@ public class MoveShip : DriveComponent {
 				}
             }
 
-			if (wheelUnit.isPowered) {
-				if (upStream.isRunning) {
-					wheelUnit.wheel.motorTorque = torqueCurrent - frictionTorque;
+			if (wheelUnit.isPowered)
+				if (torqueCurrent >= 0){
+					wheelUnit.wheel.motorTorque = torqueCurrent;
 					wheelUnit.wheel.brakeTorque = frictionTorque;
 				} else {
 					wheelUnit.wheel.motorTorque = 0;
-					wheelUnit.wheel.brakeTorque = torqueCurrent + frictionTorque;
+					wheelUnit.wheel.brakeTorque = -torqueCurrent + frictionTorque;
 				}
-            }			
+				
             ApplyLocalPositionToVisuals(wheelUnit.wheel);
         }
 

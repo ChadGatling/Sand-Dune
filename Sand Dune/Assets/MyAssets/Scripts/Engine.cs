@@ -18,6 +18,8 @@ public class Engine : DriveComponent {
 	ParticleSystem exhaust;
 	[SerializeField] float temperature = 70;
 
+	float startTime;
+
 	void Start () {
 		throttle = transform.Find("Throttle/LeverArm").GetComponent<LeverAction>();
 		ignition = transform.Find("Ignition").GetComponent<ButtonAction>();
@@ -29,10 +31,10 @@ public class Engine : DriveComponent {
 	
 	void FixedUpdate () {
 		if (isRunning) {
-			SetRpm();
-			SetTorque();
 			IncreaseTemperature();
+			SetRpm();
 			Stall();
+			SetTorque();
 		} else {
 			rpmCurrent = 0;
 			Ignition();
@@ -60,14 +62,19 @@ public class Engine : DriveComponent {
 		var rpmRatio = rpmCurrent/rpmMax;
 		// var torqueMaxThisRpm = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax);
 		// float engineBrakeTorque = torqueMaxThisRpm - torqueMaxThisRpm * throttle.howActive;
-		float torqueGross = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax) * throttle.howActive;
+		float torqueGross = Utility.EvaluateCurve(torqueCurve, rpmRatio, torqueMax) * throttle.howActive;		
+		torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1; // add torque to turn friction as the unit wears
 
 		if (downStream != null) {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
-			torqueCurrent = torqueGross - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1 - downStream.torqueToTurnMax * clutchHowActive;  
-		} else torqueCurrent = (torqueGross) - Utility.EvaluateCurve(torqueToTurnCurve, rpmRatio, torqueToTurnMax) - 1; // gets stuck when lowering throttle. maybe?
+			torqueCurrent -= downStream.torqueToTurnMax * clutchHowActive;  
+		}
 
-		if (torqueCurrent < 0) torqueCurrent *= 3; // might be as good as I can get for now. Meant to simulate engine brake.
+		if (torqueCurrent < 0)
+			torqueCurrent *= 3; // might be as good as I can get for now. Meant to simulate engine brake.
+		
+		if (!isRunning)
+			torqueCurrent *= 5;
 
 		#if UNITY_EDITOR
 		if (torqueCurrent > torqueMax) { // Remove after some time when it is shown that it will not happen.
@@ -81,8 +88,9 @@ public class Engine : DriveComponent {
 	void SetRpm() {
  		if (downStream != null) {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
-			rpmCurrent = Mathf.Lerp( rpmCurrent + torqueCurrent * Time.fixedDeltaTime, downStream.rpmCurrent, clutchHowActive);
-		} else rpmCurrent += torqueCurrent * Time.fixedDeltaTime;
+			rpmCurrent = Mathf.Lerp(rpmCurrent + torqueCurrent * Time.fixedDeltaTime * 20, downStream.rpmCurrent, clutchHowActive);
+		} else
+			rpmCurrent += torqueCurrent * Time.fixedDeltaTime * 20;
 
 		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		
@@ -92,22 +100,27 @@ public class Engine : DriveComponent {
 
 	void Ignition() {
 		if (!ignition.isActive) {
-			torqueCurrent = 0;
+			// torqueCurrent = 0;
+			startTime = 0;
 			return;
 		}
 		
-		torqueCurrent += Time.fixedDeltaTime * torqueStart;
-		torqueCurrent = Mathf.Clamp(torqueCurrent, 0, torqueStart);
-  		SetRpm();
+		if (startTime <= 0.5) {
+			startTime += Time.fixedDeltaTime;
+			torqueCurrent += torqueStart * Time.fixedDeltaTime * 2;
+			torqueCurrent = Mathf.Clamp(torqueCurrent, 0, torqueStart);
+		}
+
+		SetRpm();
 		
-		if (choke.isActive && rpmCurrent > 0) {
+		if (choke.isActive && rpmCurrent >= rpmMin) {
 			isRunning = true;
 			exhaust.Play();
 		}
 	}
 
 	void Stall() {
-		if (rpmCurrent <= 0) {
+		if (rpmCurrent <= 0 || throttle.howActive <= 0) {
 			isRunning = false;
 			exhaust.Stop();
 		}

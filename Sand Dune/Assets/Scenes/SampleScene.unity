@@ -692,6 +692,11 @@ Prefab:
       propertyPath: m_Name
       value: Throttle
       objectReference: {fileID: 0}
+    - target: {fileID: 114242638870969996, guid: 95690e08fd15eb84d90e9b1c3c4179ad,
+        type: 2}
+      propertyPath: howActive
+      value: 0.05
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95690e08fd15eb84d90e9b1c3c4179ad, type: 2}
   m_IsPrefabAsset: 0
@@ -822,16 +827,16 @@ MonoBehaviour:
       value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
     - serializedVersion: 3
       time: 1
-      value: 2
+      value: 1
       inSlope: 0
       outSlope: 0
-      tangentMode: 0
+      tangentMode: 34
       weightedMode: 0
       inWeight: 0
       outWeight: 0
@@ -1729,9 +1734,9 @@ MonoBehaviour:
   isRunning: 0
   downStream: {fileID: 744458145}
   upStream: {fileID: 0}
-  rpmCurrent: 0
+  rpmCurrent: 70
   torqueCurrent: 0
-  torqueToTurnMax: 150
+  torqueToTurnMax: 120
   torqueToTurnCurve:
     serializedVersion: 2
     m_Curve:
@@ -1740,10 +1745,10 @@ MonoBehaviour:
       value: 0
       inSlope: 1
       outSlope: 1
-      tangentMode: 0
+      tangentMode: 34
       weightedMode: 0
-      inWeight: 0.33333334
-      outWeight: 0.33333334
+      inWeight: 0
+      outWeight: 0
     - serializedVersion: 3
       time: 1
       value: 1
@@ -1751,13 +1756,13 @@ MonoBehaviour:
       outSlope: 1
       tangentMode: 34
       weightedMode: 0
-      inWeight: 0.33333334
+      inWeight: 0
       outWeight: 0
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
   torqueMax: 100
-  torqueStart: 10
+  torqueStart: 100
   torqueCurve:
     serializedVersion: 2
     m_Curve:
@@ -1771,7 +1776,7 @@ MonoBehaviour:
       inWeight: 0
       outWeight: 1
     - serializedVersion: 3
-      time: 0.075
+      time: 0.1451244
       value: 0.35
       inSlope: 0
       outSlope: 0
@@ -1780,17 +1785,17 @@ MonoBehaviour:
       inWeight: 0.33333334
       outWeight: 1
     - serializedVersion: 3
-      time: 0.11334205
+      time: 0.19
       value: 0.399252
-      inSlope: 4.0058293
-      outSlope: 4.0058293
+      inSlope: 3.3874729
+      outSlope: 3.3874729
       tangentMode: 0
       weightedMode: 0
-      inWeight: 0.3431374
+      inWeight: 0.3141244
       outWeight: 0.33333334
     - serializedVersion: 3
-      time: 0.30035743
-      value: 0.8178716
+      time: 0.3687168
+      value: 0.80914354
       inSlope: 1.356441
       outSlope: 1.356441
       tangentMode: 0
@@ -1818,8 +1823,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  rpmMax: 120
-  rpmMin: 5
+  rpmMax: 80
+  rpmMin: 20
   temperature: 70
 --- !u!199 &2073269782
 ParticleSystemRenderer:
