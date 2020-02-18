@@ -530,6 +530,11 @@ Prefab:
       propertyPath: allowNegative
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 114242638870969996, guid: 95690e08fd15eb84d90e9b1c3c4179ad,
+        type: 2}
+      propertyPath: angleMax
+      value: 60
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95690e08fd15eb84d90e9b1c3c4179ad, type: 2}
   m_IsPrefabAsset: 0
@@ -695,7 +700,12 @@ Prefab:
     - target: {fileID: 114242638870969996, guid: 95690e08fd15eb84d90e9b1c3c4179ad,
         type: 2}
       propertyPath: howActive
-      value: 0.05
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 114242638870969996, guid: 95690e08fd15eb84d90e9b1c3c4179ad,
+        type: 2}
+      propertyPath: angleMax
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95690e08fd15eb84d90e9b1c3c4179ad, type: 2}
@@ -6489,6 +6499,11 @@ Prefab:
     - target: {fileID: 1488018739430396, guid: 95690e08fd15eb84d90e9b1c3c4179ad, type: 2}
       propertyPath: m_Name
       value: Clutch
+      objectReference: {fileID: 0}
+    - target: {fileID: 114242638870969996, guid: 95690e08fd15eb84d90e9b1c3c4179ad,
+        type: 2}
+      propertyPath: angleMax
+      value: 60
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 95690e08fd15eb84d90e9b1c3c4179ad, type: 2}

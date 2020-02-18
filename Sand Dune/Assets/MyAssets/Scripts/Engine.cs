@@ -90,7 +90,7 @@ public class Engine : DriveComponent {
 			float clutchHowActive = downStream.transform.Find("Clutch/LeverArm").GetComponent<LeverAction>().howActive;
 			rpmCurrent = Mathf.Lerp(rpmCurrent + torqueCurrent * Time.fixedDeltaTime * 20, downStream.rpmCurrent, clutchHowActive);
 		} else
-			rpmCurrent += torqueCurrent * Time.fixedDeltaTime * 20;
+			rpmCurrent += torqueCurrent * Time.fixedDeltaTime;
 
 		rpmCurrent = Mathf.Clamp(rpmCurrent, 0, rpmMax);
 		

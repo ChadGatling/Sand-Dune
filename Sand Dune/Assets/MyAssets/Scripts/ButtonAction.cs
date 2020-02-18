@@ -8,7 +8,7 @@ public class ButtonAction : ObjectAction {
 
 	}
 
-	public override void Action() {
+	public override void Action(RaycastHit hit) {
 		isActive = Input.GetButton("Action");
 	}
 }

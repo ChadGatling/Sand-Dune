@@ -18,7 +18,7 @@ public class PlayerWorldClick : MonoBehaviour {
 		bool raycast = Physics.Raycast(ray, out hit, raylength, LayerMask);
 
 		if (raycast && hit.collider.tag == "Interactable") {
-			hit.collider.GetComponent<ObjectAction>().Action();
+			hit.collider.GetComponent<ObjectAction>().Action(hit);
 		}
 	}
 }

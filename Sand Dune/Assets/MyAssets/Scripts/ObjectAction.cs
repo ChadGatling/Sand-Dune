@@ -8,7 +8,8 @@ public class ObjectAction : MonoBehaviour {
 	public float howActive = 0;
 	[HideInInspector] public static float rangeMax;
 	[HideInInspector] public float rangeMin;
+	public float angleMax;
 
-	public virtual void Action () {
+	public virtual void Action (RaycastHit hit) {
 	}
 }

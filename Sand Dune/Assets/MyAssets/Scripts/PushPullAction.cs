@@ -12,7 +12,7 @@ public class PushPullAction : ObjectAction {
 		
 	}
 
-	public override void Action() {
+	public override void Action(RaycastHit hit) {
 		bool onClick = Input.GetButtonDown("Action");
 		
 		if (onClick) {
