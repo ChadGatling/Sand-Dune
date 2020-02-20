@@ -31,8 +31,8 @@ public class PlayerLook : MonoBehaviour {
 		if (inspectView) {
 			Cursor.lockState = CursorLockMode.None;
 		} else {
-			mouseX += Input.GetAxis("Mouse X");
-			mouseY += -Input.GetAxis("Mouse Y");
+			mouseX += Input.GetAxis("Mouse X") * mouseSensitivity;
+			mouseY += -Input.GetAxis("Mouse Y") * mouseSensitivity;
 			mouseY = Mathf.Clamp(mouseY, -90f, 90f);
 
 			Cursor.lockState = CursorLockMode.Locked; // seems take up a good amount of cpu time. Replace this with a UI reticle.

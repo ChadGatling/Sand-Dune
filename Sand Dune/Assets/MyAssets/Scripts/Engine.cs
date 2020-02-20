@@ -12,6 +12,7 @@ public class Engine : DriveComponent {
 	[SerializeField] float rpmMin;
 	// [SerializeField] AnimationCurve rpmCurve;
 
+	[SerializeField] float preasure;
 	LeverAction throttle;
 	ButtonAction ignition;
 	PushPullAction choke;
