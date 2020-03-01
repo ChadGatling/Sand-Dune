@@ -11,8 +11,9 @@ public class DayNightCycle : MonoBehaviour {
 	[SerializeField] float dayPercent;
 	[SerializeField] Light sun;
 	[SerializeField] Material skyboxDay;
-	[SerializeField] Material skyboNight;
+	[SerializeField] Material skyboxNight;
 	[SerializeField] AnimationCurve intensity;
+	[Range(0,1)] [SerializeField] float skyboxRatio = 0;
 
 	private float sunSeasonAngle;
 	
@@ -26,15 +27,11 @@ public class DayNightCycle : MonoBehaviour {
 
 		sun.intensity = dayNightCurveValue;
 
-		RenderSettings.skybox = dayNightCurveValue == 0 ? skyboNight : skyboxDay; // need to smoothly blend
+		// DynamicGI.UpdateEnvironment();
 
-		// This is probably overkill. maybe just make this a animationcurve
-		// if (dayPercent <= .255)
-		// 	sun.intensity = 100 * Mathf.Abs(dayPercent - .25f) + 100 * (dayPercent - .25f);
-		// else if (dayPercent >= .745)
-		// 	sun.intensity = (-100 * Mathf.Abs(dayPercent - .745f) - 100 * (dayPercent - .745f)) + 1;
-		// else
-		// 	sun.intensity = 1;
+		// RenderSettings.skybox = dayNightCurveValue == 0 ? skyboxNight : skyboxDay; // need to smoothly blend
+		// RenderSettings.skybox.Lerp(skyboxNight, skyboxDay, skyboxRatio);
+		// RenderSettings.skybox.SetFloat("_Rotation", );
 
 		timeOfDay = Mathf.Floor(currentSecondsOfTheDay / 3600).ToString("00") + ":" + (Mathf.Floor(currentSecondsOfTheDay / 60) - Mathf.Floor(currentSecondsOfTheDay / 3600) * 60).ToString("00");
 	}
